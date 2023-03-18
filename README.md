@@ -1,4 +1,5 @@
+# файлы
 
-Scrip-DB-CREATION.sql - CREATE - запросы;
-Script-2.sql - INSERT - запросы;
-SELECT ADVANCED.sql - SELECT - запросы.
+1. Scrip-DB-CREATION.sql - CREATE - запросы;
+2. Script-2.sql - INSERT - запросы;
+3. SELECT ADVANCED.sql - SELECT - запросы.
