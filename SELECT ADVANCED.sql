@@ -34,6 +34,14 @@ LEFT JOIN performer p ON pa.performerid = p.id
 LEFT JOIN albom a ON pa.albomid = a.id
 WHERE p.name = 'Metallica'));
 
+SELECT DISTINCT c.name FROM collection c
+JOIN trackcollection tc ON c.id = tc.collectionid /* Объединяем с промежуточной таблицей между сборниками и треками */
+JOIN track t ON tc.trackid = t.id /* Объединяем с треками */
+JOIN albom a ON t.albom = a.id /* Объединяем с альбомами */
+JOIN performeralbom pa ON a.id = pa.albomid /* Объединяем с промежуточной таблицей между альбомами и исполнителями */
+JOIN performer p ON pa.performerid = p.id /* Объединяем с исполнителями */
+WHERE p.name = 'Metallica'; /* Где имя исполнителя равно определенному значению */
+
 --оставил в листинге для удобства проверки
 --ищу все трэки из альбомов выбранного исполнителя
 SELECT t.name FROM track t 
@@ -62,6 +70,13 @@ JOIN performer p ON gp.performerid =p.id
 GROUP BY p.name
 HAVING COUNT(p.name) > 1);
 
+SELECT  DISTINCT a.name FROM albom a /* Из таблицы альбомов */
+JOIN performeralbom pa ON a.id = pa.albomid /* Объединяем альбомы с промежуточной таблицей между исполнителями */
+JOIN performer p ON pa.performerid =p.id /* Объединяем промежуточную таблицу с исполнителями */
+JOIN genreperformer gp ON p.id = gp.performerid /* Объединяем исполнителей с промежуточной между жанрами */
+GROUP BY a.name, p.id  /* Группируем по именам альбомов и айди исполнителей */
+HAVING COUNT(gp.genreid) > 1; /* Где количество id жанров из промежуточной таблицы больше 1 */
+
 --оставил в листинге для удобства проверки
 --исполнители более чем одного жанра
 SELECT p.name FROM genreperformer gp
@@ -75,6 +90,10 @@ SELECT name FROM track t
 WHERE name NOT IN (SELECT DISTINCT t.name FROM trackcollection tc
 JOIN track t ON tc.trackid = t.id 
 JOIN collection c ON tc.collectionid = c.id);
+
+SELECT t.name FROM track t /* Имена треков из таблицы треков */
+LEFT JOIN trackcollection tc ON t.id = tc.trackid /* Делаем левый джойн с промежуточной таблицей между треками и сборниками */
+WHERE tc.trackid is NULL; /* Где id трека из промежуточной таблицы является NULL */
 
 --оставил в листинге для удобства проверки
 --наименования треков, которые входят в сборники
